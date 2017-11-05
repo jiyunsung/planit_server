@@ -13,8 +13,20 @@ use Mix.Config
 # which you typically run after static files are built.
 config :plan_it, PlanIt.Endpoint,
   http: [:inet6, port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  url: [scheme: "https", host: "plan-it-server.herokuapp.com", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  secret_key_base: Map.fetch!(System.get_env(), "2f/UbU9a7m/fBaxpdxVViLJbYeVyeh3bJapfj2C+UeY8grhIaLBrJr61pT6Wrx76")
+
+# Configure your database
+config :plan_it, PlanIt.Repo,
+  adapter: Ecto.Adapters.MySQL,
+  username: "root",
+  password: "",
+  database: "plan_it_dev",
+  hostname: "localhost",
+  pool_size: 10
+
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -56,7 +68,3 @@ config :logger, level: :info
 #
 #     config :plan_it, PlanIt.Endpoint, server: true
 #
-
-# Finally import the config/prod.secret.exs
-# which should be versioned separately.
-import_config "prod.secret.exs"
